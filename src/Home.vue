@@ -6,15 +6,13 @@ import { useUsersStore } from "@/stores/users";
 
 const users = useUsersStore();
 
-function getRandomUsers() {
-  axios
-    .get("https://randomuser.me/api/?results=10")
-    .then(async function (response) {
-      users.setUsers(response.data.results);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+async function getRandomUsers() {
+  try {
+    const response = await axios.get("https://randomuser.me/api/?results=10");
+    users.setUsers(response.data.results);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 onMounted(() => {
@@ -27,7 +25,7 @@ onMounted(() => {
   <ul className="list-simple">
     <li className="box-white" v-for="(user, index) in users.array">
       <RouterLink :to="{ name: 'user', params: { id: index } }">
-        <!-- <img :src="require(user.picture.medium)" /> -->
+        <img :src="user.picture.medium" />
         {{ user.name.title }}. {{ user.name.first }} {{ user.name.last }}
       </RouterLink>
     </li>
